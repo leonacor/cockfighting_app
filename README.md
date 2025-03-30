@@ -1,0 +1,1 @@
+Registro de  gallos concursantes de un torneo de pelea de galltos, después de registrar a todos los gallos, se descarga un archivo con los registros en formato json. Los campos que se requieren son: propietario, anillo, color y notas.
