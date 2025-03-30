@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script><!-- llamado a la librería javascript de jquery -->
+  <script>
+    $(document).ready(function(){
+      $("#btnSave").click(function(){
+
+        /*
+        $('#id_etiqueta_html').val() es la sintaxis de jquery
+        */
+        /*------------------*/
+        //se cambiaron los id de las cajas de texto <input id="id_txt_box" type=text .../> en html
+        //se cambiaron los nombres de las variables var txt_nombre_variable en javascript
+        var txt_owner = $('#input_owner').val();
+        var txt_ring = $('#input_ring').val();
+        var txt_color = $('#input_color').val();
+        var txt_notes = $('#input_notes').val();
+        /*------------------*/
+        //se cambiaron los id de las etiquetas label <label>...</label>
+        $('#lbl_owner').text(txt_owner);
+        $('#lbl_ring').text(txt_ring);
+        $('#lbl_color').text(txt_color);
+        $('#lbl_notes').text(txt_notes);
+        /*------------------*/
+      });
+    });
+  </script>
+  <h2>Ejemplo de formulario en HTML y Javascript</h2>
+  <!--
+  style es la instrucción para los estilos css
+  el color en html se escribe en notación hexadecimal (#XXXXXX) y es a 24 bits RGB (8bits para cada color)
+  negro=#ffffff, rojo=#ff0000, verde=#00ff00, azul=#0000ff, blanco=#000000, ¿?=#5a63b9
+  revisar liga https://www.w3schools.com/colors/colors_picker.asp
+  -->
+  <p style="color:#0000ff;">En este ejemplo se trabajó sobre el  html_ver_1 y se cambiaron los id de las etiquetas html para coincidir con la aplicación. también se cambiaron los nombres de los nombres de la variables en js para coincidir con la aplicacón. </p>
+  <form action="/">
+    <label for="input_owner">Propietario: </label><br>
+    <input type="text" id="input_owner" placeholder="Nombre" required><br><br>
+    <label for="input_ring">Anillo: </label><br>
+    <input type="text" id="input_ring" placeholder="Identificación" required><br><br>
+    <label for="input_color">Color: </label><br>
+    <input type="text" id="input_color" placeholder="Descripción" required><br><br>
+    <label for="input_notes">Notas: </label><br>
+    <input type="text" id="input_notes" placeholder="Observaciones" required><br><br>
+    <br>
+    <input type="button" id="btnSave" value="Guardar">
+  </form>
+  <h3>Datos escritos en los campos de texto</h3>
+  <p>Propietario: <label id="lbl_owner"></label></p>
+  <p>Anillo: <label id="lbl_ring"></label></p>
+  <p>Color: <label id="lbl_color"></label></p>
+  <p>Notas: <label id="lbl_notes"></label></p>
+</body>
+</html>
