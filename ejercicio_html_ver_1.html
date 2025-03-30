@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script>
+  $(document).ready(function(){
+    $("#btnEnviar").click(function(){
+      var txtName = $('#fName').val();
+      var txtEmail = $('#fEmail').val();
+      var txtTelephone = $('#fTelephone').val();
+      $('#lblName').text(txtName);
+      $('#lblEmail').text(txtEmail);
+      $('#lblTelephone').text(txtTelephone);
+    });
+  });
+</script>
+<h2>Ejemplo de formulario en HTML y Javascript</h2>
+<p style="color:#00ff00;">Este ejemplo es el primero que hicimos (no se ha modificado)</p>
+<form action="/">
+  <label for="fName">Nombre completo:</label><br>
+  <input type="text" id="fName" placeholder="Escribe tú nombre" required><br>
+  <label for="fEmail">Correo electrónico:</label><br>
+  <input type="text" id="fEmail" placeholder="ejemplo@correo.com.mx" required><br>
+  <label for="fTelephone">Contacto:</label><br>
+  <input type="text" id="fTelephone" placeholder="Escribe tú teléfono" required><br><br>
+  <input type="button" id="btnEnviar" value="Enviar">
+</form>
+<h3>Datos escritos en los campos de texto</h3>
+<label id="lblName"></label>
+<label id="lblEmail"></label>
+<label id="lblTelephone"></label>
+</body>
+</html>
