@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+
+<body>
+  <h1>Torneos la San Marqueña</h1>
+  <!-- SECCIÓN PARA REGISTRAR PARTICIPANTES -->
+  <form action="/">
+    <h3>Registro de participantes</h3>
+    <label for="input_owner">Propietario: </label><br>
+    <input type="text" id="input_owner" placeholder="Nombre" required><br><br>
+    <label for="input_ring">Anillo: </label><br>
+    <input type="text" id="input_ring" placeholder="Identificación" ><br><br>
+    <label for="input_color">Color: </label><br>
+    <input type="text" id="input_color" placeholder="Descripción" ><br><br>
+    <label for="input_notes">Notas: </label><br>
+    <input type="text" id="input_notes" placeholder="Observaciones" ><br><br>
+    <br>
+    <input type="button" id="btnSave" onclick="fn_add_new_row()" value="Guardar">
+  </form>
+
+  <!--<h3>Datos escritos en los campos de texto</h3>
+  <p>Propietario: <label id="lbl_owner"></label></p>
+  <p>Anillo: <label id="lbl_ring"></label></p>
+  <p>Color: <label id="lbl_color"></label></p>
+  <p>Notas: <label id="lbl_notes"></label></p>
+  <br>-->
+  <!-- SECCIÓN PARA VER LA TABLA DE PARTICIPANTES REGISTRADOS -->
+  <h3>Tabla de participantes</h3>
+  <table id="table_records" style="width:100%">
+  <tr>
+    <th>Propietario</th>
+    <th>Anillo</th>
+    <th>Color</th>
+    <th>Notas</th>
+    <th>Hora de registro</th>
+    <th></th>
+  </tr>
+</table>
+<!-- SECCIÓN PARA DESCARGAR EL ARCHIVO -->
+<h3>Descargar archivo</h3>
+<label>Guardar archivo...</label>
+<!-- para leer el archivo descargado se recomieda el siguiente link: https://jsonformatter.org/json-parser-->
+<input type="button" id="btnDownloadFile" onclick="fn_dowloadFile()" value="Descargar">
+<!-- SECCIÓN JAVASCRIPT -->
+  <script>
+  //se crean variables globales en javascript
+  var json_array = [];//arreglo para objetos json
+  var table_records = document.getElementById("table_records");//tabla de participantes
+
+  //función que agregar registros de la tabla y agrega objetos json a la variable json_array
+  function fn_add_new_row()
+  {
+    let json_obj = {};
+    const txt_owner = document.getElementById('input_owner').value;
+    const txt_ring = document.getElementById('input_ring').value;
+    const txt_color = document.getElementById('input_color').value;
+    const txt_notes = document.getElementById('input_notes').value;
+    const txt_time = new Date();
+    if(txt_owner && txt_ring && txt_color && txt_notes)
+    {
+      json_obj = {
+        json_txt_owner:txt_owner,
+        json_txt_ring:txt_ring,
+        json_txt_color:txt_color,
+        json_txt_notes:txt_notes,
+        json_txt_time:txt_time
+      }; //creación de 1 objeto json con la información del participante
+      json_array.push(json_obj);//agrega 1 objeto json al arreglo
+      /*------------------*/
+      //se agrega renglón a la tabla
+      //se crean los renglones de la tabla cada que se presiona el botón Guardar
+      const row = table_records.insertRow();
+      let cell_owner = row.insertCell(0);
+      let cell_ring = row.insertCell(1);
+      let cell_color = row.insertCell(2);
+      let cell_notes = row.insertCell(3);
+      let cell_time = row.insertCell(4);
+      let cell_delete = row.insertCell(5);
+      /*------------------*/
+      //se vizualiza en cada celda creada en el paso anterior el contenido del objeto json que a su vez contiene la información recogída de las cajas de texto al registrar a cada participante
+      cell_owner.innerHTML = json_obj.json_txt_owner;
+      cell_ring.innerHTML = json_obj.json_txt_ring;
+      cell_color.innerHTML = json_obj.json_txt_color;
+      cell_notes.innerHTML = json_obj.json_txt_notes;
+      cell_time.innerHTML = json_obj.json_txt_time;
+      cell_delete.innerHTML = '<button onclick="fn_deleteRecord(\''+json_obj.json_txt_time+'\')">Borrar</button>';//se crea dinamicamente un boton para borrar un renglón de la tabla
+      /*------------------*/
+    }
+    else{
+      alert("Debes de llenar todos los campos para continuar")
+    }
+  }
+
+  //función para descargar archivo
+  function fn_dowloadFile(){
+    const txt_time = new Date();
+    json_array.forEach((item, i) => {
+      json_array[i].json_txt_position = i+1;//se agrega a cada elemento dentro del objeto json un contador autoincremental que nos dice el número de registro del participante
+    });
+    const json_str = JSON.stringify(json_array);//se crea una cadena de texto del objeto json, para "escribirla" en el nuevo documento descargable
+    const blob = new Blob([json_str], { type: 'application/json' });//se crea el descargable
+    const link = document.createElement('a');//etiqueta <a href="..."></a> //se agrega un link para descarga en el navegador
+    let month=txt_time.getMonth() + 1;
+    const date_month_format=month <10? "0"+month:month;
+    const time_now = txt_time.getDate()+""+date_month_format+""+txt_time.getFullYear()+"_"+Date.now();//se crea un texto de la fecha de creación del archivo descargable y se concatena al nombre del archivo
+    link.href = URL.createObjectURL(blob);
+    link.download = "registro_participantes_"+time_now+".json";//nombre del archivo con la fecha concatenada
+    link.click();//el archivo comienza a descargarse
+    URL.revokeObjectURL(link.href);
+  }
+
+  //función que borrar registros de la tabla y borra objetos json a la variable json_array
+  function fn_deleteRecord(json_txt_time){//la función recibe de parametro la fecha de registro del participante
+    let int_json_object_position = 0;
+      for(let iIndex=1;iIndex<=table_records.rows.length;iIndex++){
+        if(table_records.rows[iIndex].cells[4].innerHTML==json_txt_time){
+          //borrar renglón de la tabla
+          table_records.deleteRow(iIndex);//función que borra el renglón de la tabla html
+          //borrar objeto json del json_array
+          let fn_find_json_object = function(currentElement, index, array){//se declara la función que recorre el el json_array en busca de las coincidencias de fecha de creación
+            return array[index].json_txt_time == json_txt_time;//resultado true de la comparación del parametro recibido en la función y el objeto dentro del json_array
+          }
+          int_json_object_position = json_array.findIndex(fn_find_json_object);//se obtiene la posición del objeto dentro del json_array
+          if(int_json_object_position != -1)
+          {
+            json_array.splice(int_json_object_position,1);//se borra el objeto json dentro del json_array
+          }
+        }
+      }
+    }
+
+  /*document.getElementById('btnSave').addEventListener('click',function(){
+    document.getElementById('lbl_owner').innerHTML = document.getElementById('input_owner').value;
+    document.getElementById('lbl_ring').innerHTML = document.getElementById('input_ring').value;
+    document.getElementById('lbl_color').innerHTML = document.getElementById('input_color').value;
+    document.getElementById('lbl_notes').innerHTML = document.getElementById('input_notes').value;
+  });*/
+</script>
+</body>
+</html>
