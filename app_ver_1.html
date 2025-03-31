@@ -54,7 +54,7 @@ table, th, td {
   var json_array = [];//arreglo para objetos json
   var table_records = document.getElementById("table_records");//tabla de participantes
 
-  //función que agregar registros de la tabla y agrega objetos json a la variable json_array
+  //función que agrega registros de la tabla y agrega objetos json a la variable json_array
   function fn_add_new_row()
   {
     let json_obj = {};
@@ -63,7 +63,7 @@ table, th, td {
     const txt_color = document.getElementById('input_color').value;
     const txt_notes = document.getElementById('input_notes').value;
     const txt_time = new Date();
-    if(txt_owner && txt_ring && txt_color && txt_notes)
+    if(txt_owner && txt_ring && txt_color /*&& txt_notes*/)
     {
       json_obj = {
         json_txt_owner:txt_owner,
@@ -72,7 +72,7 @@ table, th, td {
         json_txt_notes:txt_notes,
         json_txt_time:txt_time
       }; //creación de 1 objeto json con la información del participante
-      json_array.push(json_obj);//agrega 1 objeto json al arreglo
+      json_array.push(json_obj);//agrega 1 objeto json la variable json_array
       /*------------------*/
       //se agrega renglón a la tabla
       //se crean los renglones de la tabla cada que se presiona el botón Guardar
@@ -90,7 +90,7 @@ table, th, td {
       cell_color.innerHTML = json_obj.json_txt_color;
       cell_notes.innerHTML = json_obj.json_txt_notes;
       cell_time.innerHTML = json_obj.json_txt_time;
-      cell_delete.innerHTML = '<button onclick="fn_deleteRecord(\''+json_obj.json_txt_time+'\')">Borrar</button>';//se crea dinamicamente un boton para borrar un renglón de la tabla
+      cell_delete.innerHTML = '<button onclick="fn_deleteRecord(\''+json_obj.json_txt_time+'\')">Borrar</button>';//se crea dinámicamente un botón para borrar un renglón de la tabla, y se declara una función llamada deleteRow que recibe de parametro el valor de la fecha de creación del registro, también, dinámicamente se pasa este valor al momento de crear el botón. ***revisar el código fuente dentro del navegador después de ejecutar el código y registrar algunos particpantes.***
       /*------------------*/
     }
     else{
@@ -102,7 +102,7 @@ table, th, td {
   function fn_dowloadFile(){
     const txt_time = new Date();
     json_array.forEach((item, i) => {
-      json_array[i].json_txt_position = i+1;//se agrega a cada elemento dentro del objeto json un contador autoincremental que nos dice el número de registro del participante
+      json_array[i].json_int_position = i+1;//se agrega a cada objeto json dentro del arreglo, una variable para un contador numérico autoincremental
     });
     const json_str = JSON.stringify(json_array);//se crea una cadena de texto del objeto json, para "escribirla" en el nuevo documento descargable
     const blob = new Blob([json_str], { type: 'application/json' });//se crea el descargable
@@ -116,7 +116,7 @@ table, th, td {
     URL.revokeObjectURL(link.href);
   }
 
-  //función que borrar registros de la tabla y borra objetos json a la variable json_array
+  //función que borra registros de la tabla y borra objetos json_obj dentro de la arreglo json_array
   function fn_deleteRecord(json_txt_time){//la función recibe de parametro la fecha de registro del participante
     let int_json_object_position = 0;
       for(let iIndex=1;iIndex<=table_records.rows.length;iIndex++){
