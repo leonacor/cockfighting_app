@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+
+<body>
+  <h1>Torneos la San Marqueña</h1>
+  <form action="/">
+    <h3>Registro de participantes</h3>
+    <label for="input_owner">Propietario: </label><br>
+    <input type="text" id="input_owner" placeholder="Nombre" required><br><br>
+    <label for="input_ring">Anillo: </label><br>
+    <input type="text" id="input_ring" placeholder="Identificación" ><br><br>
+    <label for="input_weight">Peso [g]: </label><br>
+    <input type="text" id="input_weight" placeholder="Peso en gramos" ><br><br>
+    <label for="input_desc">Descripción (opcional): </label><br>
+    <input type="text" id="input_desc" placeholder="Color" ><br><br>
+    <br>
+    <input type="button" id="btnSave" onclick="fn_add_new_row()" value="Guardar">
+  </form>
+  <h3>Tabla de participantes</h3>
+  <table id="table_records" style="width:100%">
+  <tr>
+    <th>Propietario</th>
+    <th>Anillo</th>
+    <th>Peso</th>
+    <th>Descripción</th>
+    <th>Hora de registro</th>
+    <th></th>
+  </tr>
+</table>
+<h3>Descargar archivo</h3>
+<label>Guardar archivo...</label>
+<input type="button" id="btnDownloadFile" onclick="fn_dowloadFile()" value="Descargar">
+  <script>
+  var json_array = [];
+  var table_records = document.getElementById("table_records");
+
+  function fn_add_new_row()
+  {
+    let json_obj = {};
+    const txt_owner = document.getElementById('input_owner').value;
+    const txt_ring = document.getElementById('input_ring').value;
+    const txt_weight = document.getElementById('input_weight').value;
+    const txt_desc = document.getElementById('input_desc').value;
+    const txt_time = new Date();
+    if(txt_owner && txt_ring && txt_weight /*&& txt_desc*/)
+    {
+      json_obj = {
+        json_txt_owner:txt_owner,
+        json_txt_ring:txt_ring,
+        json_txt_weight:txt_weight,
+        json_txt_desc:txt_desc,
+        json_txt_time:txt_time
+      };
+      json_array.push(json_obj);
+      const row = table_records.insertRow();
+      let cell_owner = row.insertCell(0);
+      let cell_ring = row.insertCell(1);
+      let cell_weight = row.insertCell(2);
+      let cell_desc = row.insertCell(3);
+      let cell_time = row.insertCell(4);
+      let cell_delete = row.insertCell(5);
+      cell_owner.innerHTML = json_obj.json_txt_owner;
+      cell_ring.innerHTML = json_obj.json_txt_ring;
+      cell_weight.innerHTML = json_obj.json_txt_weight;
+      cell_desc.innerHTML = json_obj.json_txt_desc;
+      cell_time.innerHTML = json_obj.json_txt_time;
+      cell_delete.innerHTML = '<button onclick="fn_deleteRecord(\''+json_obj.json_txt_time+'\')">Borrar</button>';
+    }
+    else{
+      alert("Debes de llenar todos los campos para continuar")
+    }
+  }
+
+  //función para descargar archivo
+  function fn_dowloadFile(){
+    const txt_time = new Date();
+    json_array.forEach((item, i) => {
+      json_array[i].json_int_position = i+1;
+    });
+    const json_str = JSON.stringify(json_array);
+    const blob = new Blob([json_str], { type: 'application/json' });
+    const link = document.createElement('a');
+    let month=txt_time.getMonth() + 1;
+    const date_month_format=month <10? "0"+month:month;
+    const time_now = txt_time.getDate()+""+date_month_format+""+txt_time.getFullYear()+"_"+Date.now();
+    link.href = URL.createObjectURL(blob);
+    link.download = "registro_participantes_"+time_now+".json";
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
+  function fn_deleteRecord(json_txt_time){
+    let int_json_object_position = 0;
+      for(let iIndex=1;iIndex<=table_records.rows.length;iIndex++){
+        if(table_records.rows[iIndex].cells[4].innerHTML==json_txt_time){
+          table_records.deleteRow(iIndex);
+          let fn_find_json_object = function(currentElement, index, array){
+            return array[index].json_txt_time == json_txt_time;
+          }
+          int_json_object_position = json_array.findIndex(fn_find_json_object);
+          if(int_json_object_position != -1)
+          {
+            json_array.splice(int_json_object_position,1);
+          }
+        }
+      }
+    }
+
+</script>
+</body>
+</html>
