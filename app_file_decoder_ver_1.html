@@ -7,6 +7,9 @@
     .lbl_red_text{
       color: #ff0000;
     }
+    .lbl_blue_text{
+      color: #0000ff;
+    }
   </style>
 </head>
 <body>
@@ -14,20 +17,30 @@
 <h3>Selecciona un archivo de texto cifrado base-64, para decodificarlo en una cadena de un arreglo de objetos json</h3>
 <input type="file" id="fileInput" accept=".txt">
 <br><br>
-<label class="lbl_red_text" id="lbl_json_decode"></label>
+<label class="lbl_red_text" id="lbl_str_error"></label>
+<label class="lbl_blue_text" id="lbl_json_str_decode"></label>
 <p>
   Copia el texto mostrado en rojo en la siguiente liga <a href="https://data.page/json/csv" target="_blank">Convert JSON to CSV</a> para convertir la cadena de un arreglo de objetos json a texto separado por comas
 </p>
 <script>
   document.getElementById('fileInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
-      let str_encode_obj_json = "";
+      let str_decode_obj_json = "";
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(event) {
           const content = event.target.result;
-          str_encode_obj_json = window.atob(content);
-          document.getElementById('lbl_json_decode').innerHTML = str_encode_obj_json;
+          try {
+            str_decode_obj_json = window.atob(content);
+            JSON.parse(str_decode_obj_json);
+          }
+          catch(err){
+            //document.getElementById('lbl_str_error').innerHTML = err.message;
+            document.getElementById('lbl_str_error').innerHTML = "Error al cargar el archivo, verifica que sea un archivo valido.";
+          }
+          finally{
+            document.getElementById('lbl_json_str_decode').innerHTML = str_decode_obj_json;
+          }
       };
       reader.readAsText(file);
   });
