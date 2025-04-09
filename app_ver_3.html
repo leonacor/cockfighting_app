@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>La San Marqueña</title>
   <style>
   table, th, td {
@@ -13,7 +14,7 @@
   <h1>Torneos la San Marqueña</h1>
   <form action="/">
     <h3>Registro de participantes</h3>
-    <label for="input_owner">Propietario: </label><br>
+    <label for="input_owner">Nombre de partido: </label><br>
     <input type="text" id="input_owner" placeholder="Nombre" size="40"><br><br>
     <label for="input_ring">Anillo: </label><br>
     <input type="text" id="input_ring" placeholder="Identificación" size="40"><br><br>
@@ -27,7 +28,7 @@
   <h3>Tabla de participantes</h3>
   <table id="table_records" style="width:100%">
   <tr>
-    <th>Propietario</th>
+    <th>Nombre de partido</th>
     <th>Anillo</th>
     <th>Peso</th>
     <th>Descripción</th>
@@ -88,8 +89,8 @@
       int_obj_array_size = i+1;
     });
     if(int_obj_array_size > 1){
-      const json_str = window.btoa(JSON.stringify(json_array));
-      const blob = new Blob([json_str], { type: 'text/plain' });//application/json
+      const str_encode_obj_json = window.btoa(JSON.stringify(json_array));
+      const blob = new Blob([str_encode_obj_json], { type: 'text/plain' });//application/json
       const link = document.createElement('a');
       let month=txt_time.getMonth() + 1;
       let day = txt_time.getDate();
